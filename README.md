@@ -1,1 +1,2 @@
-![](assets-raw/icon.png)
+![](assets/icon.png)
+# the gerio bois
