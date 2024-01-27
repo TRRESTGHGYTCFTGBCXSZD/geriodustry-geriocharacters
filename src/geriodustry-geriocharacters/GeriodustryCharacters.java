@@ -27,7 +27,9 @@ public class GeriodustryCharacters extends Mod{
 	
     @Override
     public void loadContent(){
+        GerioItems.load();
         GerioLiquids.load();
+        GerioBlocks.load();
     }
 
 }

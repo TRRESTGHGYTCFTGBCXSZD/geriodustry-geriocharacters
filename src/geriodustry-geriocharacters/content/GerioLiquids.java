@@ -10,10 +10,12 @@ public class GerioLiquids{
 
         blueBlood = new Liquid("blue-blood", Color.valueOf("40B8D8")){{
             viscosity = 0.6f;
+            coolant = false;
         }};
 
         shieldEfficiencyLiquid = new Liquid("shield-efficiency-liquid", Color.valueOf("DDDDDD")){{
             viscosity = 0.9f;
+            coolant = false;
         }};
     }
 }
