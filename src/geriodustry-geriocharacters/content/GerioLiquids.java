@@ -4,7 +4,7 @@ import arc.graphics.*;
 import mindustry.type.*;
 
 public class GerioLiquids{
-    public static Liquid blueBlood, shieldEfficiencyLiquid;
+    public static Liquid blueBlood, shieldEfficiencyLiquid, sandboxSpeedLiquid;
 
     public static void load(){
 
@@ -16,6 +16,11 @@ public class GerioLiquids{
         shieldEfficiencyLiquid = new Liquid("shield-efficiency-liquid", Color.valueOf("DDDDDD")){{
             viscosity = 0.9f;
             coolant = false;
+        }};
+		
+        sandboxSpeedLiquid = new Liquid("sandbox-speed-liquid", Color.valueOf("ff60c0")){{
+            heatCapacity = Float.POSITIVE_INFINITY;
+            coolant = true;
         }};
     }
 }

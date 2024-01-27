@@ -6,18 +6,43 @@ import mindustry.type.*;
 
 public class GerioItems{
     public static Item
-    pcb, stepperMotor;
-
-    public static final Seq<Item> serpuloItems = new Seq<>(), erekirItems = new Seq<>(), erekirOnlyItems = new Seq<>();
+    pcb, stepperMotor, capacitor, resistor, diode, transistor, icChip, cpu, gpu,
+	
+	// robot parts
+    robotHip, robotHead, robotLeg, robotArm, robotTorso, robotHand
+	;
 
     public static void load(){
-        pcb = new Item("printed-circuit-board", Color.valueOf("d99d73")){{
-            hardness = 1;
-            cost = 0.5f;
+        pcb = new Item("printed-circuit-board", Color.valueOf("009800")){{
+			flammability = 0.2f;
         }};
-        stepperMotor = new Item("stepper-motor", Color.valueOf("d99d73")){{
-            hardness = 1;
-            cost = 0.5f;
+        stepperMotor = new Item("stepper-motor", Color.valueOf("AAAAAA")){{
+        }};
+        capacitor = new Item("capacitor", Color.valueOf("AAAAAA")){{
+        }};
+        resistor = new Item("resistor", Color.valueOf("AAAAAA")){{
+        }};
+        diode = new Item("diode", Color.valueOf("AAAAAA")){{
+        }};
+        transistor = new Item("transistor", Color.valueOf("AAAAAA")){{
+        }};
+        icChip = new Item("integrated-circuit", Color.valueOf("AAAAAA")){{
+        }};
+        cpu = new Item("central-processing-unit", Color.valueOf("AAAAAA")){{
+        }};
+        gpu = new Item("graphics-processing-unit", Color.valueOf("AAAAAA")){{
+        }};
+        robotHip = new Item("robot-hip", Color.valueOf("666666")){{
+        }};
+        robotHead = new Item("robot-head", Color.valueOf("666666")){{
+        }};
+        robotLeg = new Item("robot-leg", Color.valueOf("666666")){{
+        }};
+        robotArm = new Item("robot-arm", Color.valueOf("666666")){{
+        }};
+        robotTorso = new Item("robot-torso", Color.valueOf("666666")){{
+        }};
+        robotHand = new Item("robot-hand", Color.valueOf("666666")){{
         }};
     }
 }

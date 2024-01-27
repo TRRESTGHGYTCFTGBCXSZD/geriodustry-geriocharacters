@@ -30,6 +30,7 @@ public class GeriodustryCharacters extends Mod{
         GerioItems.load();
         GerioLiquids.load();
         GerioBlocks.load();
+        GerioBlocks.overwrite(); // will make the game challenging
     }
 
 }

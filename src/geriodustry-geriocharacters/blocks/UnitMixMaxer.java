@@ -3,6 +3,7 @@ package geriodustrycharacters.blocks;
 // an unit factory extension that allows items, liquids and payloads
 
 import arc.*;
+import arc.audio.*;
 import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.math.*;
@@ -37,6 +38,8 @@ import mindustry.world.*;
 import static mindustry.Vars.*;
 
 public class UnitMixMaxer extends UnitBlock{
+    public Effect incinerateEffect = Fx.blastExplosion;
+    public Sound incinerateSound = Sounds.bang;
     public int[] capacities = {};
     public float[] liqcapacities = {};
     public int[] paycapacities = {};
@@ -78,7 +81,7 @@ public class UnitMixMaxer extends UnitBlock{
         });
 
         consume(new ConsumeItemDynamic((UnitMixMaxerBuild e) -> e.currentPlan != -1 ? plans.get(Math.min(e.currentPlan, plans.size - 1)).itemrequirements : ItemStack.empty));
-        consume(new ConsumeLiquidsDynamic((UnitMixMaxerBuild e) -> e.currentPlan != -1 ? plans.get(Math.min(e.currentPlan, plans.size - 1)).liquidrequirements : LiquidStack.empty));
+        consume(new ConsumeLiquidsDynamic((UnitMixMaxerBuild e) -> e.currentPlan != -1 ? LiquidStack.mult(plans.get(Math.min(e.currentPlan, plans.size - 1)).liquidrequirements, 1/plans.get(Math.min(e.currentPlan, plans.size - 1)).time) : LiquidStack.empty));
         consume(new ConsumePayloadDynamic((UnitMixMaxerBuild e) -> e.currentPlan != -1 ? plans.get(Math.min(e.currentPlan, plans.size - 1)).payloadrequirements : PayloadStack.list()));
     }
 
@@ -153,24 +156,32 @@ public class UnitMixMaxer extends UnitBlock{
                             info.row();
                             info.add(Strings.autoFixed(plan.time / 60f, 1) + " " + Core.bundle.get("unit.seconds")).color(Color.lightGray);
                         }).left();
-
+						int[] jjjjjjj = {0};
                         t.table(req -> {
                             req.right();
                             for(int i = 0; i < plan.itemrequirements.length; i++){
-                                if(i % 6 == 0){
+                                if(jjjjjjj[0] % 6 == 0){
                                     req.row();
                                 }
-
+								jjjjjjj[0]++;
                                 ItemStack stack = plan.itemrequirements[i];
                                 req.add(new ItemDisplay(stack.item, stack.amount, false)).pad(5);
                             }
                             for(int i = 0; i < plan.liquidrequirements.length; i++){
-                                if(i % 6 == 0){
+                                if(jjjjjjj[0] % 6 == 0){
                                     req.row();
                                 }
-								
+								jjjjjjj[0]++;
                                 LiquidStack liqstack = plan.liquidrequirements[i];
                                 req.add(new LiquidDisplay(liqstack.liquid, liqstack.amount, false)).pad(5);
+                            }
+                            for(int i = 0; i < plan.payloadrequirements.size; i++){
+                                if(jjjjjjj[0] % 6 == 0){
+                                    req.row();
+                                }
+								jjjjjjj[0]++;
+                                PayloadStack paystack = plan.payloadrequirements.get(i);
+                                req.add(new ItemImage(paystack)).pad(5);
                             }
                         }).right().grow().pad(10f);
                     }else{
@@ -224,12 +235,6 @@ public class UnitMixMaxer extends UnitBlock{
             payload = null;
         }
 
-        @Override
-        public void dumpPayload(){
-            if(payload.dump()){
-                Call.unitBlockSpawn(tile);
-            }
-        }
 		//
 
         public float fraction(){
@@ -301,6 +306,13 @@ public class UnitMixMaxer extends UnitBlock{
         @Override
         public void draw(){
             Draw.rect(region, x, y);
+            boolean fallback = true;
+            for(int i = 0; i < 4; i++){
+                if(blends(i) && i != rotation){
+                    Draw.rect(inRegion, x, y, (i * 90) - 180);
+                    fallback = false;
+                }
+            }
             Draw.rect(outRegion, x, y, rotdeg());
 
             if(currentPlan != -1){
@@ -340,9 +352,10 @@ public class UnitMixMaxer extends UnitBlock{
 				moveOutPayload();
             }else{
 				if (moveInPayload()){
-						shouldbenotbecast.add(payload.content(), 1);
+					shouldbenotbecast.add(payload.content(), 1);
+					incinerateEffect.at(this);
+					incinerateSound.at(this);
 					payload = null;
-					if (false){payload = null;};
 				}
 				if(currentPlan != -1 && payload == null){
 					GerioPayloadItemUnitPlan plan = plans.get(currentPlan);
@@ -363,8 +376,8 @@ public class UnitMixMaxer extends UnitBlock{
 						payload = new UnitPayload(unit);
 						payVector.setZero();
 						consume();
-						if (payload instanceof UnitPayload){
-							Events.fire(new UnitCreateEvent(payload.unit, this));
+						if (payload instanceof UnitPayload p){
+							Events.fire(new UnitCreateEvent(p.unit, this));
 						}
 					}
 
@@ -412,9 +425,17 @@ public class UnitMixMaxer extends UnitBlock{
 
         @Override
         public boolean acceptPayload(Building source, Payload payload){
-            var plan = plans.get(currentPlan);
-            return this.payload == null &&
-                    plan.payloadrequirements.contains(b -> b.item == payload.content() && shouldbenotbecast.get(payload.content()) < Mathf.round(b.amount * state.rules.unitCost(team)));
+			if(currentPlan != -1){
+				var plan = plans.get(currentPlan);
+				try{
+				return this.payload == null && relativeTo(source) != rotation &&
+					plan.payloadrequirements.contains(b -> b.item == payload.content() && shouldbenotbecast.get(payload.content()) < Mathf.round(b.amount * state.rules.unitCost(team)));
+				}catch(Throwable h){
+					return false;
+				}
+			}else{
+				return false;
+			}
         }
 
         @Override
