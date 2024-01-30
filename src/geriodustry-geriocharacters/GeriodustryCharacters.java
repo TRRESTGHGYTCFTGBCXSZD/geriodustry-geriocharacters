@@ -29,8 +29,12 @@ public class GeriodustryCharacters extends Mod{
     public void loadContent(){
         GerioItems.load();
         GerioLiquids.load();
+        GerioUnits.load();
         GerioBlocks.load();
         GerioBlocks.overwrite(); // will make the game challenging
+		Events.on(EventType.ClientLoadEvent.class, e -> {
+			Core.atlas.find("error").set(Core.atlas.find("trrestghgytcftgbcxszdgeriodustry-characters-dud"));
+		});
     }
 
 }

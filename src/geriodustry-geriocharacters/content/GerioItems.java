@@ -6,7 +6,7 @@ import mindustry.type.*;
 
 public class GerioItems{
     public static Item
-    pcb, stepperMotor, capacitor, resistor, diode, transistor, icChip, cpu, gpu,
+    pcb, robotPcb, stepperMotor, capacitor, inductor, resistor, transformer, diode, transistor, icChip, cpu, gpu,
 	
 	// robot parts
     robotHip, robotHead, robotLeg, robotArm, robotTorso, robotHand
@@ -16,11 +16,20 @@ public class GerioItems{
         pcb = new Item("printed-circuit-board", Color.valueOf("009800")){{
 			flammability = 0.2f;
         }};
+        robotPcb = new Item("robot-prefabricated-pcb", Color.valueOf("009800")){{
+			flammability = 0.2f;
+        }};
         stepperMotor = new Item("stepper-motor", Color.valueOf("AAAAAA")){{
         }};
         capacitor = new Item("capacitor", Color.valueOf("AAAAAA")){{
+			charge = 0.2f;
+        }};
+        inductor = new Item("inductor", Color.valueOf("AAAAAA")){{
+			charge = 0.3f;
         }};
         resistor = new Item("resistor", Color.valueOf("AAAAAA")){{
+        }};
+        transformer = new Item("transformer", Color.valueOf("AAAAAA")){{
         }};
         diode = new Item("diode", Color.valueOf("AAAAAA")){{
         }};

@@ -348,7 +348,7 @@ public class UnitMixMaxer extends UnitBlock{
                 speedScl = Mathf.lerpDelta(speedScl, 0f, 0.05f);
             }
 
-            if (payload instanceof UnitPayload && payload.content() == plans.get(currentPlan).unit){
+            if (currentPlan == -1 || (payload instanceof UnitPayload && payload.content() == plans.get(currentPlan).unit)){
 				moveOutPayload();
             }else{
 				if (moveInPayload()){
